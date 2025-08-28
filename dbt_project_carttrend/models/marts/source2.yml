@@ -1,0 +1,161 @@
+version: 2
+
+models:
+  - name: dim_clients
+    description: "Table de dimension contenant les informations des clients"
+    columns:
+      - name: id_client
+        description: "Identifiant unique du client"
+        tests: [unique, not_null]
+
+  - name: dim_entrepots
+    description: "Table des entrepôts contenant des informations de capacité, température, etc."
+    columns:
+      - name: id_entrepot
+        tests: [unique, not_null]
+
+  - name: dim_machine
+    description: "Table des machines avec leur type"
+    columns:
+      - name: id_machine
+        tests: [unique, not_null]
+
+  - name: dim_date
+    description: "Table de dimension temporelle générée entre 2019 et 2025"
+    columns:
+      - name: id_date
+        tests: [unique, not_null]
+
+  - name: dim_canal
+    description: "Table de dimension des canaux marketing (réseaux sociaux, etc.)"
+    columns:
+      - name: id_canal
+        tests: [unique, not_null]
+
+  - name: dim_produit
+    description: "Table des produits (nom)"
+    columns:
+      - name: id_produit
+        tests: [unique, not_null]
+
+  - name: dim_satisfaction
+    description: "Commentaires et évaluations des clients"
+    columns:
+      - name: id_satisfaction
+        tests: [unique]
+      - name: id_commande
+        tests:
+          - relationships:
+              to: ref('fact_commandes')
+              field: id_commande
+
+  - name: dim_promotions
+    description: "Promotions appliquées à des produits sur une période"
+    columns:
+      - name: id_promotion
+        tests: [unique, not_null]
+      - name: id_produit
+        tests:
+          - relationships:
+              to: ref('dim_produit')
+              field: id_produit
+      - name: id_date_debut
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: id_date
+      - name: id_date_fin
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: id_date
+
+  - name: dim_details_commandes
+    description: "Détails des commandes (quantité, emballage, produit lié)"
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: id_details_produits
+        tests:
+          - relationships:
+              to: ref('dim_produit')
+              field: id_produit
+      - name: id_commande
+        tests:
+          - relationships:
+              to: ref('fact_commandes')
+              field: id_commande
+
+  - name: facts_entrepots_machines
+    description: "Faits sur les interventions machines : état, temps d'arrêt, volume traité"
+    columns:
+      - name: id_intervention_machine
+        tests: [unique, not_null]
+      - name: id_entrepot
+        tests:
+          - relationships:
+              to: ref('dim_entrepots')
+              field: id_entrepot
+      - name: id_machine
+        tests:
+          - relationships:
+              to: ref('dim_machine')
+              field: id_machine
+
+  - name: facts_posts
+    description: "Publications sociales contenant le sentiment, volume de mentions, etc."
+    columns:
+      - name: id_post
+        tests: [unique, not_null]
+      - name: id_canal
+        tests:
+          - relationships:
+              to: ref('dim_canal')
+              field: id_canal
+      - name: id_date
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: id_date
+
+  - name: facts_campagnes
+    description: "Faits sur les campagnes marketing"
+    columns:
+      - name: id_campagne
+        tests: [unique, not_null]
+      - name: id_canal_dim_canal
+        tests:
+          - relationships:
+              to: ref('dim_canal')
+              field: id_canal
+
+  - name: fact_commandes
+    description: "Table des commandes avec tracking, client, entrepôt, date, etc."
+    columns:
+      - name: id_commande
+        tests: [unique, not_null]
+      - name: id_client
+        tests:
+          - relationships:
+              to: ref('dim_clients')
+              field: id_client
+      - name: id_promotion
+        tests:
+          - relationships:
+              to: ref('dim_promotions')
+              field: id_promotion
+      - name: id_entrepot
+        tests:
+          - relationships:
+              to: ref('dim_entrepots')
+              field: id_entrepot
+      - name: id_date_commande
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: id_date
+      - name: id_date_livraison
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: id_date

@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: carttrend_rawdata
+    database: rising-mercury-463817-s5
+    schema: carttrend_rawdata
+    tables:
+      - name: carttrend_produits
+        description: "Contient la liste des produits référencés avec leurs caractéristiques"
+      - name: carttrend_clients
+        description: "Données clients : identifiants, infos personnelles et localisation"
+      - name: carttrend_campaigns
+        description: "Historique des campagnes marketing et publicitaires"
+      - name: carttrend_entrepots
+        description: "Liste des entrepôts d’expédition ou de stockage"
+      - name: carttrend_details_commandes
+        description: "Détail des produits associés à chaque commande (lignes de commande)"
+      - name: carttrend_commandes
+        description: ""
+      - name: carttrend_entrepots_machine
+        description: "Association entre les machines industrielles et les entrepôts"
+      - name: carttrend_promotions
+        description: "Historique des promotions appliquées sur les produits"
+      - name: carttrend_posts
+        description: "Mentions sociales et sentiment analysis des publications sur les réseaux"
+      - name: carttrend_satisfaction
+        description: |
+          Données de satisfaction client collectées suite aux commandes.
+          Contient les notes attribuées par les clients, leurs commentaires, 
+          les plaintes éventuelles, ainsi que les détails du support client 
+          (temps de réponse, type de plainte, employé en charge).
